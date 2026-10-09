@@ -1,0 +1,132 @@
+.editable-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+.editable-head h3 { margin: 0; }
+
+.notes-block { margin-top: 2rem; }
+
+/* Editor shell */
+.rte {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.rte:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+.rte-disabled { opacity: 0.65; }
+
+.rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.rte-btn {
+  min-width: 34px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.rte-btn:hover:not(:disabled) { background: var(--card); border-color: var(--border); }
+.rte-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.rte-btn[aria-pressed="true"] { color: #fff; background: var(--primary); }
+.rte-btn-bold { font-weight: 700; }
+.rte-btn-italic { font-style: italic; }
+
+.rte-sep { width: 1px; height: 20px; margin: 0 0.25rem; background: var(--border); }
+
+/* Shared text styles for the editor and the read-only view */
+.editable-card .ProseMirror {
+  min-height: 160px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 0.8rem 1rem;
+  outline: none;
+}
+
+.editable-card .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.editable-card .rich-content,
+.editable-card .ProseMirror {
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.editable-card .rich-content p,
+.editable-card .ProseMirror p { margin: 0 0 0.6rem; }
+
+.editable-card .rich-content > :last-child,
+.editable-card .ProseMirror > :last-child { margin-bottom: 0; }
+
+.editable-card .rich-content h2,
+.editable-card .ProseMirror h2 { margin: 1rem 0 0.4rem; font-size: 1.15rem; }
+
+.editable-card .rich-content h3,
+.editable-card .ProseMirror h3 { margin: 0.9rem 0 0.35rem; font-size: 1rem; }
+
+.editable-card .rich-content ul,
+.editable-card .rich-content ol,
+.editable-card .ProseMirror ul,
+.editable-card .ProseMirror ol {
+  display: block;
+  margin: 0 0 0.6rem;
+  padding-left: 1.4rem;
+}
+
+.editable-card .rich-content li,
+.editable-card .ProseMirror li { margin: 0.2rem 0; }
+
+.editable-card .rich-content a,
+.editable-card .ProseMirror a { color: var(--primary); text-decoration: underline; }
+
+.editable-card .rich-content blockquote,
+.editable-card .ProseMirror blockquote {
+  margin: 0 0 0.6rem;
+  padding-left: 0.9rem;
+  color: var(--muted);
+  border-left: 3px solid var(--border);
+}
+
+.editable-card .rich-content code,
+.editable-card .ProseMirror code {
+  padding: 0.1rem 0.35rem;
+  font-size: 0.85em;
+  background: var(--bg);
+  border-radius: 4px;
+}
+
+.editable-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+.editable-actions .btn-primary { width: auto; min-width: 120px; }
+
+@media (max-width: 640px) {
+  .editable-actions { flex-direction: column-reverse; }
+  .editable-actions .btn-primary,
+  .editable-actions .btn-secondary { width: 100%; }
+}

@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+   }
+
+enum MeetingType {
+  CLIENT
+  SALES
+  PROJECT
+  INTERNAL
+  REQUIREMENT
+  RETROSPECTIVE
+  OTHER
+}
+
+enum ActionStatus {
+  OPEN
+  IN_PROGRESS
+  BLOCKED
+  COMPLETED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum AiStatus {
+  NOT_STARTED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  meetings    Meeting[]
+  actionItems ActionItem[]
+
+  @@map("users")
+}
+
+model Meeting {
+  id           String      @id @default(uuid()) @db.Uuid
+  title        String
+  meetingDate  DateTime    @db.Date
+  type         MeetingType @default(PROJECT)
+  participants String[]    @default([])
+  transcript   String      @db.Text
+  notes        String?     @db.Text
+
+  aiStatus      AiStatus  @default(NOT_STARTED)
+  aiError       String?
+  aiProcessedAt DateTime?
+
+  summary       String?   @db.Text
+  purpose       String?   @db.Text
+  keyPoints     String[]  @default([])
+  outcomes      String[]  @default([])
+  decisions     String[]  @default([])
+  risks         String[]  @default([])
+  nextSteps     String[]  @default([])
+  openQuestions String[]  @default([])
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  actionItems ActionItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([userId, title])
+  @@map("meetings")
+}
+
+model ActionItem {
+  id          String       @id @default(uuid()) @db.Uuid
+  description String       @db.Text
+  owner       String?
+  dueDate     DateTime?    @db.Date
+  priority    Priority     @default(MEDIUM)
+  status      ActionStatus @default(OPEN)
+  aiGenerated Boolean      @default(false)
+
+  meetingId String  @db.Uuid
+  meeting   Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, status])
+  @@index([userId, dueDate])
+  @@index([meetingId])
+  @@map("action_items")
+}
